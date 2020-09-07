@@ -2,7 +2,7 @@ from django.shortcuts import render
 import requests
 from bs4 import BeautifulSoup
 
-# GEtting news from Times of India
+# times
 
 toi_r = requests.get("https://timesofindia.indiatimes.com/briefs")
 toi_soup = BeautifulSoup(toi_r.content, 'html5lib')
@@ -15,8 +15,6 @@ toi_news = []
 
 for th in toi_headings:
     toi_news.append(th.text)
-
-
 
 #Getting news from Hindustan times
 
