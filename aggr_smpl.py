@@ -1,6 +1,8 @@
 import json
 import notify2
-import beautifulsoup
+import requests
+from bs4 import BeautifulSoup
+from gensim.summarization import summarize
 
 def alert(info):
 	notify2.init('content aggr')
@@ -9,11 +11,33 @@ def alert(info):
         notif.show()
         notif.set_timeout(10)
 
-urlclient = urlreq(fullscrapadr)
-urlpg = urlclient.read()
+with open('ca_cfgs.json', 'r') as reader:
+	cfgs = reader.read()
 
-urlclient.close()
-urldata = bs4.BeautifulSoup(urlpg, 'html.parser')
-urldata.find(scrtagcapture).text.strip()
+def get_content():
+	url = json.loads(cfgs)['source']
 
-alert(--)
+	# Retrieve page
+	page = requests.get(url).text
+
+	# Tbs object
+	soup = BeautifulSoup(page, 'html.parser')
+
+	# headline
+	headline = soup.find('h1').get_text()
+
+	# <p> tags text
+	p_tags = soup.find_all('p’)
+	p_tags_text = [tag.get_text().strip() for tag in p_tags] # @ 'p' & strip
+
+	# Filter out sentences filter; chars '\n', no '.'
+	sentence_list = [sentence for sentence in p_tags_text if not '\n' in sentence]
+	sentence_list = [sentence for sentence in sentence_list if '.' in sentence]
+
+	# Combine items list
+	article = ' '.join(sentence_list)
+	summary = summarize(article_text, ratio=0.3)
+
+	return summary
+
+alert(get_content())
