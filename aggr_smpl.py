@@ -36,7 +36,7 @@ def get_content():
 
 	# Combine items list
 	article = ' '.join(sentence_list)
-	summary = summarize(article_text, ratio=0.3)
+	summary = summarize(article_text, ratio = 0.3)
 
 	return summary
 
