@@ -6,3 +6,7 @@
 <code>data category</code>
 <code>time</code>
 <code>area</code>
+
+```python3
+python3 -m c_a
+```
